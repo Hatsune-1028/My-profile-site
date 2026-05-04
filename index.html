@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>成果物を置いていくページ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <nav class="site-nav" aria-label="primary">
+        <div class="site-mark">Archive / Works</div>
+        <div class="site-links">
+          <a href="#about">About</a>
+          <a href="#works">Works</a>
+          <a href="#note">Note</a>
+          <a href="#profile">Vision</a>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">WORKS IN PROGRESS</p>
+          <h1>作ったものを、少しずつ置いていくページ</h1>
+          <p class="hero-text">
+            完成度が高いものだけでなく、途中のものや小さく作ったものも含めて、
+            自分の手で作った成果物をひとつずつ公開していくための場所です。
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#note">成果物を見る</a>
+            <a class="button button-secondary" href="#about">このページについて</a>
+          </div>
+        </div>
+
+        <aside class="hero-panel" aria-label="site overview">
+          <p class="panel-label">CURRENT FOCUS</p>
+          <div class="signal">
+            <span class="signal-dot"></span>
+            <span>Learning + Publishing</span>
+          </div>
+          <dl class="hero-metrics">
+            <div>
+              <dt>Theme</dt>
+              <dd>AI x Marketing</dd>
+            </div>
+            <div>
+              <dt>Current Study</dt>
+              <dd>Marketing Basics</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd>Growing Archive</dd>
+            </div>
+          </dl>
+        </aside>
+      </header>
+
+      <main>
+        <section class="card-grid" id="about">
+          <article class="card card-accent">
+            <h2>このサイトについて</h2>
+            <p>
+              成長過程を残しておきたいと思い、このサイトを作りました。
+              小さな制作物や試作も含めて、少しずつ積み上げていく場所にしたいです。
+            </p>
+          </article>
+          <article class="card">
+            <h2>載せていくもの</h2>
+            <p>
+              Webページ、デザイン、勉強中の小さな制作物に加えて、
+              読んでいる本や学びの記録も気負わずに追加していける形にしています。
+            </p>
+          </article>
+          <article class="card">
+            <h2>この先の使い方</h2>
+            <p>
+              少しずつカードや記録を足していくことで、自分のアーカイブとして育てていけます。
+            </p>
+          </article>
+        </section>
+
+        <section class="profile" id="profile">
+          <div class="profile-copy">
+            <p class="section-label">APPROACH</p>
+            <h2>AI時代を生き抜くマーケターを目指しています</h2>
+            <p>
+              AI時代を生き抜くマーケターを目指して、日々学びながら制作や発信に取り組んでいます。
+            </p>
+          </div>
+          <div class="profile-panel">
+            <p>Point 1</p>
+            <strong>小さな制作物でも載せる</strong>
+            <p>Point 2</p>
+            <strong>作った背景をひとこと添える</strong>
+            <p>Point 3</p>
+            <strong>後から見て成長がわかる形にする</strong>
+          </div>
+        </section>
+
+        <section class="note-section" id="note">
+          <div class="note-copy">
+            <p class="section-label">NOTE</p>
+            <h2>学習記録は note にもまとめています</h2>
+            <p>
+              このサイトでは全体の流れを、noteではその時々の学びや気づきをもう少し詳しく残していく予定です。
+            </p>
+            <a class="button button-primary" href="https://note.com/juna_ailab" target="_blank" rel="noreferrer">
+              noteを見る
+            </a>
+          </div>
+          <div class="note-grid">
+            <a class="note-card note-card-featured" href="https://note.com/juna_ailab/n/ne83210d239c8" target="_blank" rel="noreferrer">
+              <p class="note-label">NEW ARTICLE</p>
+              <div class="note-featured-layout">
+                <div class="note-thumbnail">
+                  <img src="./note-article-thumb.png" alt="最新のnote記事サムネイル" />
+                </div>
+                <div class="note-featured-copy">
+                  <p class="note-date">2026.05.02 Public</p>
+                  <h3>[はじめてのnote]人間はAIにどこまで任せられるのか。</h3>
+                  <p>マーケティングにおけるAIの役割を考えた、最新の公開記事です。記事本文はこちらから読めます。</p>
+                  <span class="note-link">記事を読む</span>
+                </div>
+              </div>
+            </a>
+            <a class="note-card" href="https://note.com/juna_ailab" target="_blank" rel="noreferrer">
+              <p class="note-label">PROFILE</p>
+              <h3>juna_ailab の note</h3>
+              <p>学習記録、考えたこと、これから形にしたいことをまとめていく入口です。</p>
+              <span class="note-link">noteプロフィールへ</span>
+            </a>
+            <article class="note-card note-card-muted">
+              <p class="note-label">COMING SOON</p>
+              <h3>学びの記録を並べる場所</h3>
+              <p>今後は読んだ本、実践したこと、気づいたことを記事単位で整理していく想定です。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="contact" id="works">
+          <p class="section-label">WORKS</p>
+          <h2>学んでいること</h2>
+
+          <div class="works-grid">
+            <section class="work-column is-active" aria-label="進行中">
+              <div class="work-column-header">
+                <span class="work-dot"></span>
+                <span class="work-column-title">進行中</span>
+                <span class="work-count">2</span>
+              </div>
+              <div class="work-list">
+                <article class="work-card">
+                  <div class="work-meta">
+                    <p class="work-tag">Now Reading</p>
+                    <span class="work-pill">現在</span>
+                  </div>
+                  <h3>いちばんやさしいマーケティングの教本 第2版</h3>
+                  <div class="work-date">2026年4月 -</div>
+                  <p>顧客視点でマーケティングの基本と実践を学んでいます。</p>
+                </article>
+                <article class="work-card">
+                  <div class="work-meta">
+                    <p class="work-tag">Current Theme</p>
+                  </div>
+                  <h3>学んだことを自分の言葉でまとめる</h3>
+                  <div class="work-date">2026年4月 -</div>
+                  <p>本を読みながら、制作や発信にどう活かせるかを少しずつ整理しています。</p>
+                </article>
+              </div>
+            </section>
+
+            <section class="work-column is-plan" aria-label="予定">
+              <div class="work-column-header">
+                <span class="work-dot"></span>
+                <span class="work-column-title">予定</span>
+                <span class="work-count">2</span>
+              </div>
+              <div class="work-list">
+                <article class="work-card">
+                  <div class="work-meta">
+                    <p class="work-tag">Next</p>
+                    <span class="work-pill">予定</span>
+                  </div>
+                  <h3>学びを成果物として公開する</h3>
+                  <div class="work-date">Next Step</div>
+                  <p>読んだ内容や気づきを、自分の制作物として少しずつ公開していく予定です。</p>
+                </article>
+                <article class="work-add">+ 次の学習テーマを追加する</article>
+              </div>
+            </section>
+          </div>
+
+          <div class="works-grid-bottom">
+            <section class="work-column is-done" aria-label="完了">
+              <div class="work-column-header">
+                <span class="work-dot"></span>
+                <span class="work-column-title">完了</span>
+                <span class="work-count">2</span>
+              </div>
+              <div class="work-list work-list-complete">
+                <article class="work-card">
+                  <div class="work-meta">
+                    <p class="work-tag">Done</p>
+                    <span class="work-pill">完了</span>
+                  </div>
+                  <h3>このサイトの方向性を決める</h3>
+                  <div class="work-date">2026年4月</div>
+                  <p>成果物や学びを残していく個人サイトとして方針を固めました。</p>
+                </article>
+                <article class="work-card">
+                  <div class="work-meta">
+                    <p class="work-tag">Done</p>
+                    <span class="work-pill">完了</span>
+                  </div>
+                  <h3>公開用のトップページを作る</h3>
+                  <div class="work-date">2026年4月</div>
+                  <p>白基調で見やすいレイアウトに整えて、土台になるページを作成しました。</p>
+                </article>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

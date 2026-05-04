@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Song Pronunciation Coach</title>
+    <style>
+      :root {
+        --bg: #f4efe6;
+        --paper: rgba(255, 252, 246, 0.94);
+        --ink: #1f2a2c;
+        --muted: #59676b;
+        --accent: #ff6b35;
+        --accent-deep: #c94d1f;
+        --secondary: #14453d;
+        --line: rgba(31, 42, 44, 0.12);
+        --hit: #d7f3df;
+        --miss: #ffe1d6;
+        --extra: #dcecff;
+        --info: #fff2d7;
+        --shadow: 0 18px 50px rgba(20, 69, 61, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(255, 107, 53, 0.18), transparent 28%),
+          radial-gradient(circle at top right, rgba(20, 69, 61, 0.16), transparent 24%),
+          linear-gradient(180deg, #f8f3eb 0%, #efe5d7 100%);
+      }
+
+      .page-shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 40px 0 56px;
+      }
+
+      .hero {
+        margin-bottom: 28px;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--accent-deep);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .hero h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.5rem, 7vw, 4.6rem);
+        line-height: 0.95;
+      }
+
+      .hero-copy {
+        max-width: 760px;
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-size: 1.05rem;
+        line-height: 1.7;
+      }
+
+      .app-grid {
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 18px;
+      }
+
+      .panel {
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+      }
+
+      .panel-results {
+        grid-column: 1 / -1;
+      }
+
+      .panel-head,
+      .button-row,
+      .score-grid,
+      .legend,
+      .nav-row,
+      .mini-grid {
+        display: flex;
+        gap: 12px;
+      }
+
+      .panel-head,
+      .button-row,
+      .nav-row {
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .score-grid,
+      .mini-grid {
+        margin-top: 18px;
+      }
+
+      .score-grid,
+      .mini-grid {
+        flex-wrap: wrap;
+      }
+
+      h2,
+      h3 {
+        margin: 0 0 16px;
+      }
+
+      h2 {
+        font-size: 1.15rem;
+      }
+
+      h3 {
+        font-size: 1rem;
+      }
+
+      .field-label,
+      .result-title,
+      .tips-title,
+      .playback-title,
+      .status-label,
+      .score-label,
+      .mini-label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      textarea,
+      input[type="file"] {
+        width: 100%;
+        font: inherit;
+      }
+
+      textarea {
+        padding: 16px 18px;
+        border: 1px solid rgba(20, 69, 61, 0.18);
+        border-radius: 20px;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--ink);
+        background: rgba(255, 255, 255, 0.82);
+        resize: vertical;
+      }
+
+      input[type="file"] {
+        padding: 12px 0;
+      }
+
+      textarea:focus,
+      button:focus,
+      input:focus {
+        outline: 3px solid rgba(255, 107, 53, 0.22);
+        outline-offset: 2px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 999px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 180ms ease, opacity 180ms ease, background 180ms ease;
+      }
+
+      button:hover:not(:disabled) {
+        transform: translateY(-1px);
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      .primary-button,
+      .secondary-button,
+      .ghost-button {
+        padding: 14px 18px;
+      }
+
+      .primary-button {
+        color: white;
+        background: linear-gradient(135deg, var(--accent) 0%, #ff8c5b 100%);
+      }
+
+      .secondary-button {
+        color: white;
+        background: linear-gradient(135deg, var(--secondary) 0%, #1f6b61 100%);
+      }
+
+      .ghost-button {
+        color: var(--secondary);
+        background: rgba(20, 69, 61, 0.08);
+      }
+
+      .tips-card,
+      .status-card,
+      .playback-card,
+      .score-card,
+      .result-block,
+      .line-card,
+      .file-card,
+      .advice-card,
+      .mini-card,
+      .clip-card {
+        margin-top: 18px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.7);
+      }
+
+      .tips-card ul {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .support-note,
+      .status-text,
+      .muted,
+      .file-note,
+      .line-sub {
+        color: var(--muted);
+      }
+
+      .status-text {
+        margin: 0;
+        font-size: 1.02rem;
+      }
+
+      .score-card,
+      .mini-card {
+        flex: 1;
+        min-width: 140px;
+      }
+
+      .score-card strong {
+        font-size: 1.8rem;
+      }
+
+      .mini-card strong {
+        font-size: 1.3rem;
+      }
+
+      .result-text,
+      .line-text,
+      .advice-text {
+        margin: 0;
+        line-height: 1.8;
+      }
+
+      .clip-meta {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.6;
+      }
+
+      .line-text {
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+
+      .line-sub {
+        margin: 0 0 10px;
+        font-size: 0.9rem;
+      }
+
+      .diff-output {
+        min-height: 90px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .word-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 999px;
+        font-size: 0.95rem;
+        border: 1px solid transparent;
+      }
+
+      .word-chip.hit {
+        background: var(--hit);
+        border-color: rgba(57, 142, 86, 0.18);
+      }
+
+      .word-chip.miss {
+        background: var(--miss);
+        border-color: rgba(201, 77, 31, 0.18);
+      }
+
+      .word-chip.extra {
+        background: var(--extra);
+        border-color: rgba(47, 105, 189, 0.18);
+      }
+
+      .legend {
+        margin-top: 18px;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        color: var(--muted);
+      }
+
+      .legend-chip {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        margin-right: 8px;
+        border-radius: 999px;
+        vertical-align: -2px;
+      }
+
+      .legend-chip.hit {
+        background: var(--hit);
+      }
+
+      .legend-chip.miss {
+        background: var(--miss);
+      }
+
+      .legend-chip.extra {
+        background: var(--extra);
+      }
+
+      .line-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: var(--info);
+        color: var(--accent-deep);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .wave-strip {
+        display: grid;
+        grid-template-columns: repeat(24, 1fr);
+        gap: 4px;
+        align-items: end;
+        height: 84px;
+        margin-top: 14px;
+      }
+
+      .wave-bar {
+        border-radius: 999px 999px 6px 6px;
+        background: linear-gradient(180deg, rgba(255, 107, 53, 0.95), rgba(20, 69, 61, 0.8));
+        min-height: 8px;
+      }
+
+      .wave-bar.reference {
+        background: linear-gradient(180deg, rgba(20, 69, 61, 0.92), rgba(31, 42, 44, 0.7));
+      }
+
+      .empty-state {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      audio {
+        width: 100%;
+      }
+
+      @media (max-width: 860px) {
+        .app-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .panel-head,
+        .button-row,
+        .score-grid,
+        .nav-row,
+        .mini-grid {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .page-shell {
+          width: min(100% - 20px, 1180px);
+          padding-top: 24px;
+        }
+
+        .panel {
+          padding: 20px;
+          border-radius: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">Open By Double Click</p>
+        <h1>Song Pronunciation Coach</h1>
+        <p class="hero-copy">
+          発音チェックに加えて、1行ずつの歌い方も見比べられる版です。
+          声そのものではなく、入り方、伸ばし方、抑揚の流れを比べます。
+        </p>
+      </header>
+
+      <main class="app-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <h2>1. 練習する歌詞</h2>
+            <button id="fill-sample" class="ghost-button" type="button">
+              サンプルを入れる
+            </button>
+          </div>
+
+          <label class="field-label" for="lyrics-input">歌詞やフレーズ</label>
+          <textarea
+            id="lyrics-input"
+            rows="16"
+            placeholder="例: You are my fire, the one desire"
+          >Prema
+Don't u know that u are love itself
+You are love itself
+Prema
+Can't u see that u are god itself
+You are god itself
+
+I don't lie
+I'm all about the truth and
+I don't hide
+Overwhelmingly I'm open
+I survived
+All the crazy things you gave
+n every mess that was ever made
+
+You are mine
+I call your name and you will
+Be on time
+Living in this small world and its
+Future's bright
+Brighter than my ceiling lights
+n sweeter than my mother's cream pie
+
+Follow my tender heart and I'll win
+No matter what pain I am in
+With all your blessings I'll arise
+Open up my third eye
+
+Prema
+Don't u know that u are love itself
+You are love itself
+Prema
+Can't u see that u are god itself
+You are god itself
+
+Finalized
+We got each other always
+Fantasized
+Surely knew we could do it
+I decide
+Every day I meditate
+And make every action a prayer
+
+Filling my heart with your affection
+Being your best friend is my devotion
+Calling your name is my surrender
+Babe, I got your number
+
+Filling my heart with your affection
+Being your best friend is my devotion
+Calling your name is my surrender
+Babe, I got your number
+
+Prema
+Don't u know that I am love itself
+I am love itself
+Prema
+Can't u see that I am god itself
+I am god itself</textarea>
+
+          <div class="nav-row" style="margin-top: 16px;">
+            <button id="sync-lines" class="ghost-button" type="button">
+              行を更新
+            </button>
+            <span id="line-count" class="line-badge">0 lines</span>
+          </div>
+
+          <div class="line-card">
+            <p class="line-sub">いま練習する1行</p>
+            <p id="current-line" class="line-text">まだ行がありません。</p>
+            <div class="nav-row" style="margin-top: 14px;">
+              <button id="prev-line" class="ghost-button" type="button">前の行</button>
+              <span id="line-position" class="line-badge">0 / 0</span>
+              <button id="next-line" class="ghost-button" type="button">次の行</button>
+            </div>
+          </div>
+
+          <div class="tips-card">
+            <p class="tips-title">使い方のコツ</p>
+            <ul>
+              <li>まずは1行だけ選ぶのがおすすめですが、お手本音声は前後を少し含む長さでも大丈夫です。</li>
+              <li>今の版は、お手本の中から近い場所を自動で探してから比べます。</li>
+              <li>似ているかは声質ではなく、入り、伸ばし、抑揚で見ます。</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>2. 歌い方チェック</h2>
+          <p id="support-note" class="support-note"></p>
+
+          <div class="file-card">
+            <label class="field-label" for="reference-file">お手本の音声</label>
+            <input id="reference-file" type="file" accept="audio/*" />
+            <p id="reference-note" class="file-note">
+              現在の行に近い場所を含む音声を入れると、歌い方比較ができます。
+            </p>
+            <audio id="reference-audio" controls></audio>
+          </div>
+
+          <div class="clip-card">
+            <h3>見本の切り出し</h3>
+            <div class="nav-row">
+              <button id="mark-start" class="ghost-button" type="button">ここから</button>
+              <button id="mark-end" class="ghost-button" type="button">ここまで</button>
+              <button id="save-clip" class="secondary-button" type="button">この行に保存</button>
+            </div>
+            <div class="nav-row" style="margin-top: 12px;">
+              <button id="clear-marks" class="ghost-button" type="button">印をクリア</button>
+              <button id="auto-split" class="primary-button" type="button">自動で行ごとに割り当て</button>
+            </div>
+            <p id="clip-meta" class="clip-meta">
+              まず見本音声を読み込んでください。再生しながら区切りたい場所で印を付けられます。
+            </p>
+          </div>
+
+          <div class="button-row">
+            <button id="start-button" class="primary-button" type="button">
+              録音してチェック開始
+            </button>
+            <button id="stop-button" class="secondary-button" type="button" disabled>
+              停止
+            </button>
+          </div>
+
+          <div class="status-card">
+            <p class="status-label">ステータス</p>
+            <p id="status-text" class="status-text">待機中です。</p>
+          </div>
+
+          <div class="score-grid">
+            <div class="score-card">
+              <span class="score-label">発音一致</span>
+              <strong id="match-score">0%</strong>
+            </div>
+            <div class="score-card">
+              <span class="score-label">歌い方</span>
+              <strong id="style-score">-</strong>
+            </div>
+            <div class="score-card">
+              <span class="score-label">認識信頼度</span>
+              <strong id="confidence-score">-</strong>
+            </div>
+          </div>
+
+          <div class="mini-grid">
+            <div class="mini-card">
+              <span class="mini-label">入り</span>
+              <strong id="entry-score">-</strong>
+            </div>
+            <div class="mini-card">
+              <span class="mini-label">伸ばし</span>
+              <strong id="length-score">-</strong>
+            </div>
+            <div class="mini-card">
+              <span class="mini-label">抑揚</span>
+              <strong id="flow-score">-</strong>
+            </div>
+          </div>
+
+          <div class="playback-card">
+            <p class="playback-title">自分の音声を聞き返す</p>
+            <audio id="playback" controls></audio>
+          </div>
+        </section>
+
+        <section class="panel panel-results">
+          <h2>3. 比較結果</h2>
+
+          <div class="result-block">
+            <p class="result-title">認識された内容</p>
+            <p id="recognized-text" class="result-text muted">
+              まだ結果はありません。
+            </p>
+          </div>
+
+          <div class="result-block">
+            <p class="result-title">単語ごとの比較</p>
+            <div id="diff-output" class="diff-output"></div>
+          </div>
+
+          <div class="result-block">
+            <p class="result-title">抑揚の流れ</p>
+            <p class="line-sub">上がお手本の近い部分、下があなたの録音です。</p>
+            <div id="reference-wave" class="wave-strip"></div>
+            <div id="user-wave" class="wave-strip"></div>
+          </div>
+
+          <div class="advice-card">
+            <p class="result-title">ひとことアドバイス</p>
+            <p id="advice-text" class="advice-text muted">
+              お手本音声を入れると、歌い方のコメントをここに出します。
+            </p>
+          </div>
+
+          <div class="legend">
+            <span><i class="legend-chip hit"></i> 合っていた</span>
+            <span><i class="legend-chip miss"></i> 抜けた/聞き取られなかった</span>
+            <span><i class="legend-chip extra"></i> 余分に認識された</span>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      const lyricsInput = document.getElementById("lyrics-input");
+      const fillSampleButton = document.getElementById("fill-sample");
+      const syncLinesButton = document.getElementById("sync-lines");
+      const lineCount = document.getElementById("line-count");
+      const currentLine = document.getElementById("current-line");
+      const linePosition = document.getElementById("line-position");
+      const prevLineButton = document.getElementById("prev-line");
+      const nextLineButton = document.getElementById("next-line");
+      const referenceFile = document.getElementById("reference-file");
+      const referenceNote = document.getElementById("reference-note");
+      const referenceAudio = document.getElementById("reference-audio");
+      const markStartButton = document.getElementById("mark-start");
+      const markEndButton = document.getElementById("mark-end");
+      const saveClipButton = document.getElementById("save-clip");
+      const clearMarksButton = document.getElementById("clear-marks");
+      const autoSplitButton = document.getElementById("auto-split");
+      const clipMeta = document.getElementById("clip-meta");
+      const startButton = document.getElementById("start-button");
+      const stopButton = document.getElementById("stop-button");
+      const statusText = document.getElementById("status-text");
+      const supportNote = document.getElementById("support-note");
+      const recognizedText = document.getElementById("recognized-text");
+      const diffOutput = document.getElementById("diff-output");
+      const matchScore = document.getElementById("match-score");
+      const styleScore = document.getElementById("style-score");
+      const confidenceScore = document.getElementById("confidence-score");
+      const entryScore = document.getElementById("entry-score");
+      const lengthScore = document.getElementById("length-score");
+      const flowScore = document.getElementById("flow-score");
+      const adviceText = document.getElementById("advice-text");
+      const playback = document.getElementById("playback");
+      const referenceWave = document.getElementById("reference-wave");
+      const userWave = document.getElementById("user-wave");
+
+      let recognition;
+      let mediaRecorder;
+      let audioChunks = [];
+      let lastTranscript = "";
+      let lastConfidence = null;
+      let practiceLines = [];
+      let currentLineIndex = 0;
+      let audioContext;
+      let userAnalysis = null;
+      let masterReference = null;
+      let clipStartTime = null;
+      let clipEndTime = null;
+      let pendingSeekTime = 0;
+      let segmentPlaybackEnd = null;
+      const referenceByLine = new Map();
+
+      const sampleLyrics = lyricsInput.value;
+
+      fillSampleButton.addEventListener("click", () => {
+        lyricsInput.value = sampleLyrics;
+        syncPracticeLines();
+        lyricsInput.focus();
+      });
+
+      const setStatus = (message) => {
+        statusText.textContent = message;
+      };
+
+      const normalize = (text) =>
+        text
+          .toLowerCase()
+          .replace(/[\u2019']/g, "")
+          .replace(/[^a-z0-9\s]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+      const tokenize = (text) => normalize(text).split(" ").filter(Boolean);
+
+      const extractPracticeLines = (text) =>
+        text
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean);
+
+      const formatTime = (seconds) => {
+        if (!Number.isFinite(seconds)) {
+          return "--:--.--";
+        }
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        const hund = Math.floor((seconds - Math.floor(seconds)) * 100);
+        return (
+          String(mins).padStart(2, "0") +
+          ":" +
+          String(secs).padStart(2, "0") +
+          "." +
+          String(hund).padStart(2, "0")
+        );
+      };
+
+      const getCurrentPracticeLine = () =>
+        practiceLines[currentLineIndex] || "";
+
+      const buildDiff = (expected, actual) => {
+        const dp = Array.from({ length: expected.length + 1 }, () =>
+          Array(actual.length + 1).fill(0)
+        );
+
+        for (let i = 1; i <= expected.length; i += 1) {
+          for (let j = 1; j <= actual.length; j += 1) {
+            if (expected[i - 1] === actual[j - 1]) {
+              dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+              dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+          }
+        }
+
+        const tokens = [];
+        let i = expected.length;
+        let j = actual.length;
+
+        while (i > 0 && j > 0) {
+          if (expected[i - 1] === actual[j - 1]) {
+            tokens.unshift({ type: "hit", value: expected[i - 1] });
+            i -= 1;
+            j -= 1;
+          } else if (dp[i - 1][j] >= dp[i][j - 1]) {
+            tokens.unshift({ type: "miss", value: expected[i - 1] });
+            i -= 1;
+          } else {
+            tokens.unshift({ type: "extra", value: actual[j - 1] });
+            j -= 1;
+          }
+        }
+
+        while (i > 0) {
+          tokens.unshift({ type: "miss", value: expected[i - 1] });
+          i -= 1;
+        }
+
+        while (j > 0) {
+          tokens.unshift({ type: "extra", value: actual[j - 1] });
+          j -= 1;
+        }
+
+        return tokens;
+      };
+
+      const renderDiff = (expectedText, actualText) => {
+        const expectedTokens = tokenize(expectedText);
+        const actualTokens = tokenize(actualText);
+
+        diffOutput.innerHTML = "";
+
+        if (!expectedTokens.length && !actualTokens.length) {
+          diffOutput.innerHTML = '<p class="empty-state">ここに比較結果が表示されます。</p>';
+          matchScore.textContent = "0%";
+          return;
+        }
+
+        const diff = buildDiff(expectedTokens, actualTokens);
+        const hitCount = diff.filter((token) => token.type === "hit").length;
+        const total = expectedTokens.length || 1;
+        const score = Math.round((hitCount / total) * 100);
+
+        matchScore.textContent = score + "%";
+
+        diff.forEach((token) => {
+          const chip = document.createElement("span");
+          chip.className = "word-chip " + token.type;
+          chip.textContent = token.value;
+          diffOutput.appendChild(chip);
+        });
+      };
+
+      const resetStyleScores = () => {
+        styleScore.textContent = "-";
+        entryScore.textContent = "-";
+        lengthScore.textContent = "-";
+        flowScore.textContent = "-";
+      };
+
+      const renderWave = (container, samples, kind) => {
+        container.innerHTML = "";
+
+        if (!samples || !samples.length) {
+          const empty = document.createElement("p");
+          empty.className = "empty-state";
+          empty.textContent = kind === "reference"
+            ? "お手本の流れはここに表示されます。"
+            : "あなたの流れはここに表示されます。";
+          container.appendChild(empty);
+          return;
+        }
+
+        samples.forEach((value) => {
+          const bar = document.createElement("div");
+          bar.className = "wave-bar" + (kind === "reference" ? " reference" : "");
+          bar.style.height = Math.max(8, Math.round(value * 76)) + "px";
+          container.appendChild(bar);
+        });
+      };
+
+      const average = (values) =>
+        values.reduce((sum, value) => sum + value, 0) / (values.length || 1);
+
+      const resample = (values, targetLength) => {
+        if (!values.length) {
+          return Array(targetLength).fill(0);
+        }
+
+        if (values.length === targetLength) {
+          return values.slice();
+        }
+
+        const result = [];
+        for (let i = 0; i < targetLength; i += 1) {
+          const position = (i * (values.length - 1)) / Math.max(targetLength - 1, 1);
+          const left = Math.floor(position);
+          const right = Math.min(values.length - 1, Math.ceil(position));
+          const weight = position - left;
+          const interpolated =
+            values[left] * (1 - weight) + values[right] * weight;
+          result.push(interpolated);
+        }
+        return result;
+      };
+
+      const sliceIntoWindows = (values, windowLength, step) => {
+        const windows = [];
+        const safeWindowLength = Math.max(4, Math.min(windowLength, values.length));
+        const safeStep = Math.max(1, step);
+
+        if (values.length <= safeWindowLength) {
+          windows.push({
+            start: 0,
+            values: values.slice()
+          });
+          return windows;
+        }
+
+        for (let start = 0; start + safeWindowLength <= values.length; start += safeStep) {
+          windows.push({
+            start,
+            values: values.slice(start, start + safeWindowLength)
+          });
+        }
+
+        const lastStart = values.length - safeWindowLength;
+        if (!windows.length || windows[windows.length - 1].start !== lastStart) {
+          windows.push({
+            start: lastStart,
+            values: values.slice(lastStart, lastStart + safeWindowLength)
+          });
+        }
+
+        return windows;
+      };
+
+      const scoreByGap = (gap, fullGap) =>
+        Math.max(0, Math.min(100, Math.round(100 - (gap / fullGap) * 100)));
+
+      const correlationScore = (a, b) => {
+        const left = resample(a, 24);
+        const right = resample(b, 24);
+        const meanA = average(left);
+        const meanB = average(right);
+        let numerator = 0;
+        let denomA = 0;
+        let denomB = 0;
+
+        for (let i = 0; i < left.length; i += 1) {
+          const da = left[i] - meanA;
+          const db = right[i] - meanB;
+          numerator += da * db;
+          denomA += da * da;
+          denomB += db * db;
+        }
+
+        if (!denomA || !denomB) {
+          return 0;
+        }
+
+        const correlation = numerator / Math.sqrt(denomA * denomB);
+        return Math.max(0, Math.round(((correlation + 1) / 2) * 100));
+      };
+
+      const findBestAlignedSegment = (referenceAnalysis, userAnalysis) => {
+        const referenceEnvelope = referenceAnalysis.envelope;
+        const userEnvelope = userAnalysis.envelope;
+
+        if (!referenceEnvelope.length || !userEnvelope.length) {
+          return {
+            score: 0,
+            segment: referenceAnalysis,
+            offsetRatio: 0
+          };
+        }
+
+        const targetLength = Math.min(
+          referenceEnvelope.length,
+          Math.max(8, Math.round(userEnvelope.length * 1.15))
+        );
+        const step = Math.max(1, Math.round(targetLength / 6));
+        const windows = sliceIntoWindows(referenceEnvelope, targetLength, step);
+
+        let best = {
+          score: -1,
+          start: 0,
+          values: referenceEnvelope.slice(0, targetLength)
+        };
+
+        windows.forEach((window) => {
+          const score = correlationScore(window.values, userEnvelope);
+          if (score > best.score) {
+            best = {
+              score,
+              start: window.start,
+              values: window.values
+            };
+          }
+        });
+
+        const voicedCount = best.values.filter((value) => value > 0.12).length;
+        const maxValue = Math.max(...best.values, 0.0001);
+        const normalized = best.values.map((value) => value / maxValue);
+        const onsetIndex = normalized.findIndex((value) => value > 0.22);
+        const actualOnsetIndex = onsetIndex === -1 ? 0 : onsetIndex;
+        const segmentDuration =
+          referenceAnalysis.duration *
+          (best.values.length / Math.max(referenceEnvelope.length, 1));
+
+        return {
+          score: best.score,
+          offsetRatio: best.start / Math.max(referenceEnvelope.length - 1, 1),
+          segment: {
+            duration: segmentDuration,
+            onsetRatio: actualOnsetIndex / Math.max(normalized.length - 1, 1),
+            voicedRatio: voicedCount / Math.max(normalized.length, 1),
+            envelope: normalized,
+            bars: resample(normalized, 24)
+          }
+        };
+      };
+
+      const getAudioContext = () => {
+        if (!audioContext) {
+          const Context = window.AudioContext || window.webkitAudioContext;
+          audioContext = new Context();
+        }
+        return audioContext;
+      };
+
+      const mixToMono = (audioBuffer) => {
+        const channelData = [];
+        for (let channel = 0; channel < audioBuffer.numberOfChannels; channel += 1) {
+          channelData.push(audioBuffer.getChannelData(channel));
+        }
+
+        const mono = new Float32Array(audioBuffer.length);
+        for (let i = 0; i < audioBuffer.length; i += 1) {
+          let sum = 0;
+          for (let channel = 0; channel < channelData.length; channel += 1) {
+            sum += channelData[channel][i];
+          }
+          mono[i] = sum / channelData.length;
+        }
+        return mono;
+      };
+
+      const analyseAudioBuffer = (audioBuffer) => {
+        const mono = mixToMono(audioBuffer);
+        const windowSize = 2048;
+        const envelope = [];
+
+        for (let start = 0; start < mono.length; start += windowSize) {
+          const end = Math.min(start + windowSize, mono.length);
+          let sumSquares = 0;
+
+          for (let i = start; i < end; i += 1) {
+            sumSquares += mono[i] * mono[i];
+          }
+
+          envelope.push(Math.sqrt(sumSquares / Math.max(end - start, 1)));
+        }
+
+        const maxValue = Math.max(...envelope, 0.0001);
+        const normalized = envelope.map((value) => value / maxValue);
+        const onsetIndex = normalized.findIndex((value) => value > 0.22);
+        const actualOnsetIndex = onsetIndex === -1 ? 0 : onsetIndex;
+        const voicedCount = normalized.filter((value) => value > 0.12).length;
+
+        return {
+          duration: audioBuffer.duration,
+          onsetRatio: actualOnsetIndex / Math.max(normalized.length - 1, 1),
+          voicedRatio: voicedCount / Math.max(normalized.length, 1),
+          envelope: normalized,
+          bars: resample(normalized, 24)
+        };
+      };
+
+      const analyseAudioBlob = async (blob) => {
+        const context = getAudioContext();
+        if (context.state === "suspended") {
+          await context.resume();
+        }
+        const arrayBuffer = await blob.arrayBuffer();
+        const audioBuffer = await context.decodeAudioData(arrayBuffer.slice(0));
+        return analyseAudioBuffer(audioBuffer);
+      };
+
+      const sliceAudioBuffer = (audioBuffer, startTime, endTime) => {
+        const safeStart = Math.max(0, Math.min(startTime, audioBuffer.duration));
+        const safeEnd = Math.max(safeStart, Math.min(endTime, audioBuffer.duration));
+        const sampleRate = audioBuffer.sampleRate;
+        const startSample = Math.floor(safeStart * sampleRate);
+        const endSample = Math.max(startSample + 1, Math.floor(safeEnd * sampleRate));
+        const frameCount = endSample - startSample;
+        const clipped = new AudioBuffer({
+          length: frameCount,
+          numberOfChannels: audioBuffer.numberOfChannels,
+          sampleRate
+        });
+
+        for (let channel = 0; channel < audioBuffer.numberOfChannels; channel += 1) {
+          const source = audioBuffer.getChannelData(channel).slice(startSample, endSample);
+          clipped.copyToChannel(source, channel, 0);
+        }
+
+        return clipped;
+      };
+
+      const analyseAudioRange = (audioBuffer, startTime, endTime) =>
+        analyseAudioBuffer(sliceAudioBuffer(audioBuffer, startTime, endTime));
+
+      const detectSegmentsFromMaster = (analysis) => {
+        const values = analysis.envelope;
+        if (!values.length || !masterReference) {
+          return [];
+        }
+
+        const threshold = 0.1;
+        const minBars = 4;
+        const segments = [];
+        let start = null;
+
+        for (let i = 0; i < values.length; i += 1) {
+          const active = values[i] > threshold;
+          if (active && start === null) {
+            start = i;
+          }
+
+          const nextInactive = !active || i === values.length - 1;
+          if (start !== null && nextInactive) {
+            const endIndex = active && i === values.length - 1 ? i + 1 : i;
+            if (endIndex - start >= minBars) {
+              segments.push({ startIndex: start, endIndex });
+            }
+            start = null;
+          }
+        }
+
+        return segments.map((segment) => {
+          const startTime =
+            (segment.startIndex / Math.max(values.length, 1)) * masterReference.buffer.duration;
+          const endTime =
+            (segment.endIndex / Math.max(values.length, 1)) * masterReference.buffer.duration;
+          const paddedStart = Math.max(0, startTime - 0.12);
+          const paddedEnd = Math.min(masterReference.buffer.duration, endTime + 0.12);
+          return {
+            startTime: paddedStart,
+            endTime: Math.max(paddedStart + 0.15, paddedEnd)
+          };
+        });
+      };
+
+      const renderClipMeta = () => {
+        if (!masterReference) {
+          clipMeta.textContent =
+            "まず見本音声を読み込んでください。再生しながら区切りたい場所で印を付けられます。";
+          return;
+        }
+
+        const parts = ["見本: " + masterReference.name];
+        parts.push("現在位置 " + formatTime(referenceAudio.currentTime || 0));
+        parts.push("開始 " + (clipStartTime === null ? "-" : formatTime(clipStartTime)));
+        parts.push("終了 " + (clipEndTime === null ? "-" : formatTime(clipEndTime)));
+        clipMeta.textContent = parts.join(" / ");
+      };
+
+      const setReferencePlayback = (reference) => {
+        if (!reference) {
+          segmentPlaybackEnd = null;
+          referenceAudio.removeAttribute("src");
+          return;
+        }
+
+        pendingSeekTime = reference.startTime || 0;
+        segmentPlaybackEnd =
+          Number.isFinite(reference.endTime) && reference.endTime > pendingSeekTime
+            ? reference.endTime
+            : null;
+
+        if (referenceAudio.src !== reference.url) {
+          referenceAudio.src = reference.url;
+        } else if (referenceAudio.readyState >= 1) {
+          try {
+            referenceAudio.currentTime = Math.min(
+              pendingSeekTime,
+              Math.max(referenceAudio.duration - 0.01, 0)
+            );
+          } catch (error) {
+            // Ignore seek timing issues during source reuse.
+          }
+        }
+      };
+
+      const assignReferenceToLine = (lineIndex, payload) => {
+        const existing = referenceByLine.get(lineIndex);
+        if (existing && existing.ownedUrl && existing.url) {
+          URL.revokeObjectURL(existing.url);
+        }
+
+        referenceByLine.set(lineIndex, payload);
+      };
+
+      const setAdvice = (message, muted) => {
+        adviceText.textContent = message;
+        adviceText.classList.toggle("muted", Boolean(muted));
+      };
+
+      const compareStyle = () => {
+        const reference = referenceByLine.get(currentLineIndex);
+        const alignedReference = reference && userAnalysis
+          ? findBestAlignedSegment(reference.analysis, userAnalysis)
+          : null;
+
+        renderWave(
+          referenceWave,
+          alignedReference ? alignedReference.segment.bars : reference ? reference.analysis.bars : [],
+          "reference"
+        );
+        renderWave(userWave, userAnalysis ? userAnalysis.bars : [], "user");
+
+        if (!reference || !userAnalysis) {
+          resetStyleScores();
+          if (!reference) {
+            setAdvice("お手本音声を入れると、歌い方のコメントをここに出します。", true);
+          } else {
+            setAdvice("お手本は入りました。次はこの1行を録音すると、近い場所を探して比較します。", true);
+          }
+          return;
+        }
+
+        const referenceSegment = alignedReference.segment;
+
+        const entry = scoreByGap(
+          Math.abs(referenceSegment.onsetRatio - userAnalysis.onsetRatio),
+          0.35
+        );
+
+        const durationRatioGap =
+          Math.abs(referenceSegment.duration - userAnalysis.duration) /
+          Math.max(referenceSegment.duration, userAnalysis.duration, 0.001);
+        const sustainGap = Math.abs(referenceSegment.voicedRatio - userAnalysis.voicedRatio);
+        const lengthNormalized = Math.max(0, Math.min(100, 100 - Math.round(durationRatioGap * 100) - Math.round(sustainGap * 40)));
+        const flow = correlationScore(referenceSegment.envelope, userAnalysis.envelope);
+        const overall = Math.round(entry * 0.3 + lengthNormalized * 0.35 + flow * 0.35);
+
+        styleScore.textContent = overall + "%";
+        entryScore.textContent = entry + "%";
+        lengthScore.textContent = lengthNormalized + "%";
+        flowScore.textContent = flow + "%";
+
+        const advice = [];
+
+        if (entry < 65) {
+          if (userAnalysis.onsetRatio < referenceSegment.onsetRatio) {
+            advice.push("入りが少し早めです。お手本よりほんの少し待ってから入ると近づきます。");
+          } else {
+            advice.push("入りが少し遅めです。頭の一音をもう少し早く置くと近づきます。");
+          }
+        }
+
+        if (lengthNormalized < 65) {
+          if (userAnalysis.duration < referenceSegment.duration) {
+            advice.push("全体に短めです。語尾を少しだけ長く残す意識が合いそうです。");
+          } else {
+            advice.push("全体に長めです。切る場所を少し早めるとまとまりやすいです。");
+          }
+        }
+
+        if (flow < 65) {
+          advice.push("抑揚の山が違っています。強く出す単語を1つ決めて、そこだけ前に出すと近づきます。");
+        }
+
+        if (!advice.length) {
+          advice.push("かなり近いです。次は子音の立ち上がりを少しはっきりさせると、さらに締まって聞こえます。");
+        }
+
+        if (alignedReference.offsetRatio > 0.08 || alignedReference.score < 90) {
+          advice.unshift("お手本の中から近い場所を自動で合わせて比較しました。");
+        }
+
+        setAdvice(advice.join(" "), false);
+      };
+
+      const updateResults = () => {
+        recognizedText.textContent = lastTranscript || "まだ結果はありません。";
+        recognizedText.classList.toggle("muted", !lastTranscript);
+        renderDiff(getCurrentPracticeLine(), lastTranscript);
+        confidenceScore.textContent =
+          typeof lastConfidence === "number"
+            ? Math.round(lastConfidence * 100) + "%"
+            : "-";
+        compareStyle();
+      };
+
+      const renderCurrentLineState = () => {
+        const line = getCurrentPracticeLine();
+        currentLine.textContent = line || "まだ行がありません。";
+        lineCount.textContent = practiceLines.length + " lines";
+        linePosition.textContent = practiceLines.length
+          ? currentLineIndex + 1 + " / " + practiceLines.length
+          : "0 / 0";
+        prevLineButton.disabled = currentLineIndex <= 0;
+        nextLineButton.disabled =
+          !practiceLines.length || currentLineIndex >= practiceLines.length - 1;
+
+        const reference = referenceByLine.get(currentLineIndex);
+        referenceNote.textContent = reference
+          ? "この行には「" + reference.name + "」が入っています。"
+          : masterReference
+            ? "見本全体は読み込み済みです。必要ならこの行の区間を保存するか、自動割り当てを使えます。"
+            : "現在の行に近い場所を含む音声を入れると、歌い方比較ができます。";
+        setReferencePlayback(reference || masterReference);
+
+        lastTranscript = "";
+        lastConfidence = null;
+        userAnalysis = null;
+        playback.removeAttribute("src");
+        resetStyleScores();
+        renderWave(referenceWave, reference ? reference.analysis.bars : [], "reference");
+        renderWave(userWave, [], "user");
+        setAdvice("お手本音声を入れると、歌い方のコメントをここに出します。", true);
+        renderClipMeta();
+        updateResults();
+      };
+
+      const syncPracticeLines = () => {
+        practiceLines = extractPracticeLines(lyricsInput.value);
+        currentLineIndex = Math.min(currentLineIndex, Math.max(practiceLines.length - 1, 0));
+        renderCurrentLineState();
+      };
+
+      const stopRecording = () => {
+        if (recognition) {
+          recognition.stop();
+        }
+
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+          mediaRecorder.stop();
+        }
+
+        startButton.disabled = false;
+        stopButton.disabled = true;
+      };
+
+      const startAudioCapture = async () => {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.addEventListener("dataavailable", (event) => {
+          if (event.data.size > 0) {
+            audioChunks.push(event.data);
+          }
+        });
+
+        mediaRecorder.addEventListener("stop", async () => {
+          const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || "audio/webm" });
+          playback.src = URL.createObjectURL(audioBlob);
+          stream.getTracks().forEach((track) => track.stop());
+
+          try {
+            userAnalysis = await analyseAudioBlob(audioBlob);
+            compareStyle();
+          } catch (error) {
+            setStatus("録音はできましたが、歌い方の解析に失敗しました。");
+          }
+        });
+
+        mediaRecorder.start();
+      };
+
+      const canStartPractice = () => {
+        if (!practiceLines.length) {
+          setStatus("先に歌詞を入れて、行を更新してください。");
+          lyricsInput.focus();
+          return false;
+        }
+
+        if (!SpeechRecognition) {
+          setStatus("このブラウザは音声認識に対応していません。Chrome か Safari を試してください。");
+          return false;
+        }
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+          setStatus("このブラウザは録音機能に対応していません。");
+          return false;
+        }
+
+        return true;
+      };
+
+      const configureRecognition = () => {
+        recognition = new SpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.interimResults = true;
+        recognition.continuous = true;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = () => {
+          setStatus("録音中です。今の1行を歌ってみてください。");
+        };
+
+        recognition.onresult = (event) => {
+          let transcript = "";
+          let confidence = null;
+
+          for (let index = event.resultIndex; index < event.results.length; index += 1) {
+            const result = event.results[index];
+            transcript += result[0].transcript + " ";
+
+            if (result.isFinal) {
+              confidence = result[0].confidence;
+            }
+          }
+
+          if (transcript.trim()) {
+            lastTranscript = transcript.trim();
+          }
+
+          if (confidence !== null) {
+            lastConfidence = confidence;
+          }
+
+          updateResults();
+        };
+
+        recognition.onerror = (event) => {
+          const messages = {
+            "no-speech": "声がうまく入らなかったようです。もう一度試してください。",
+            "audio-capture": "マイクを使えませんでした。ブラウザの権限を確認してください。",
+            "not-allowed": "マイク利用が許可されていません。ブラウザの設定を確認してください。"
+          };
+
+          setStatus(messages[event.error] || "音声認識エラー: " + event.error);
+          stopRecording();
+        };
+
+        recognition.onend = () => {
+          if (!stopButton.disabled) {
+            setStatus("認識が終了しました。結果を確認してください。");
+            stopRecording();
+          }
+        };
+      };
+
+      referenceAudio.addEventListener("loadedmetadata", () => {
+        try {
+          referenceAudio.currentTime = Math.min(
+            pendingSeekTime || 0,
+            Math.max(referenceAudio.duration - 0.01, 0)
+          );
+        } catch (error) {
+          // Ignore seek timing issues on initial metadata load.
+        }
+        renderClipMeta();
+      });
+
+      referenceAudio.addEventListener("timeupdate", () => {
+        if (
+          segmentPlaybackEnd !== null &&
+          referenceAudio.currentTime >= segmentPlaybackEnd
+        ) {
+          referenceAudio.pause();
+        }
+        renderClipMeta();
+      });
+
+      referenceFile.addEventListener("change", async (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) {
+          return;
+        }
+
+        try {
+          const analysis = await analyseAudioBlob(file);
+          const context = getAudioContext();
+          if (context.state === "suspended") {
+            await context.resume();
+          }
+          const arrayBuffer = await file.arrayBuffer();
+          const decodedBuffer = await context.decodeAudioData(arrayBuffer.slice(0));
+          if (masterReference && masterReference.ownedUrl) {
+            URL.revokeObjectURL(masterReference.url);
+          }
+          masterReference = {
+            name: file.name,
+            url: URL.createObjectURL(file),
+            analysis,
+            buffer: decodedBuffer,
+            startTime: 0,
+            endTime: decodedBuffer.duration,
+            ownedUrl: true
+          };
+          clipStartTime = null;
+          clipEndTime = null;
+
+          setReferencePlayback(referenceByLine.get(currentLineIndex) || masterReference);
+          referenceNote.textContent =
+            "見本全体として「" + file.name + "」を読み込みました。必要ならここから今の行を切り出せます。";
+          renderWave(referenceWave, analysis.bars, "reference");
+          compareStyle();
+          renderClipMeta();
+          setStatus("見本音声を読み込みました。");
+        } catch (error) {
+          setStatus("お手本音声を読み込めませんでした。");
+        }
+      });
+
+      markStartButton.addEventListener("click", () => {
+        if (!masterReference) {
+          setStatus("先に見本音声を読み込んでください。");
+          return;
+        }
+
+        clipStartTime = referenceAudio.currentTime;
+        if (clipEndTime !== null && clipEndTime < clipStartTime) {
+          clipEndTime = null;
+        }
+        renderClipMeta();
+        setStatus("開始位置を付けました。");
+      });
+
+      markEndButton.addEventListener("click", () => {
+        if (!masterReference) {
+          setStatus("先に見本音声を読み込んでください。");
+          return;
+        }
+
+        clipEndTime = referenceAudio.currentTime;
+        if (clipStartTime !== null && clipEndTime < clipStartTime) {
+          const temp = clipStartTime;
+          clipStartTime = clipEndTime;
+          clipEndTime = temp;
+        }
+        renderClipMeta();
+        setStatus("終了位置を付けました。");
+      });
+
+      clearMarksButton.addEventListener("click", () => {
+        clipStartTime = null;
+        clipEndTime = null;
+        renderClipMeta();
+        setStatus("印をクリアしました。");
+      });
+
+      saveClipButton.addEventListener("click", () => {
+        if (!masterReference) {
+          setStatus("先に見本音声を読み込んでください。");
+          return;
+        }
+
+        const startTime =
+          clipStartTime === null
+            ? 0
+            : Math.min(
+                clipStartTime,
+                clipEndTime === null ? masterReference.buffer.duration : clipEndTime
+              );
+        const endTime =
+          clipEndTime === null
+            ? masterReference.buffer.duration
+            : Math.max(clipEndTime, startTime + 0.15);
+        const analysis = analyseAudioRange(masterReference.buffer, startTime, endTime);
+
+        assignReferenceToLine(currentLineIndex, {
+          name:
+            masterReference.name +
+            " [" +
+            formatTime(startTime) +
+            "-" +
+            formatTime(endTime) +
+            "]",
+          url: masterReference.url,
+          startTime,
+          endTime,
+          analysis,
+          ownedUrl: false
+        });
+
+        referenceNote.textContent =
+          "この行に " + formatTime(startTime) + " から " + formatTime(endTime) + " を保存しました。";
+        setReferencePlayback(referenceByLine.get(currentLineIndex));
+        renderWave(referenceWave, analysis.bars, "reference");
+        compareStyle();
+        renderClipMeta();
+        setStatus("今の行に見本区間を保存しました。");
+      });
+
+      autoSplitButton.addEventListener("click", () => {
+        if (!masterReference) {
+          setStatus("先に見本音声を読み込んでください。");
+          return;
+        }
+
+        if (!practiceLines.length) {
+          setStatus("先に歌詞を入れて、行を更新してください。");
+          return;
+        }
+
+        const segments = detectSegmentsFromMaster(masterReference.analysis);
+        if (!segments.length) {
+          setStatus("自動分割できませんでした。手動で印を付けて保存してください。");
+          return;
+        }
+
+        const count = Math.min(segments.length, practiceLines.length);
+        for (let i = 0; i < count; i += 1) {
+          const segment = segments[i];
+          assignReferenceToLine(i, {
+            name:
+              masterReference.name +
+              " [" +
+              formatTime(segment.startTime) +
+              "-" +
+              formatTime(segment.endTime) +
+              "]",
+            url: masterReference.url,
+            startTime: segment.startTime,
+            endTime: segment.endTime,
+            analysis: analyseAudioRange(
+              masterReference.buffer,
+              segment.startTime,
+              segment.endTime
+            ),
+            ownedUrl: false
+          });
+        }
+
+        renderCurrentLineState();
+        setStatus(count + " 行ぶんに自動で見本を割り当てました。");
+      });
+
+      syncLinesButton.addEventListener("click", syncPracticeLines);
+
+      prevLineButton.addEventListener("click", () => {
+        if (currentLineIndex > 0) {
+          currentLineIndex -= 1;
+          renderCurrentLineState();
+        }
+      });
+
+      nextLineButton.addEventListener("click", () => {
+        if (currentLineIndex < practiceLines.length - 1) {
+          currentLineIndex += 1;
+          renderCurrentLineState();
+        }
+      });
+
+      startButton.addEventListener("click", async () => {
+        if (!canStartPractice()) {
+          return;
+        }
+
+        lastTranscript = "";
+        lastConfidence = null;
+        userAnalysis = null;
+        playback.removeAttribute("src");
+        updateResults();
+
+        startButton.disabled = true;
+        stopButton.disabled = false;
+
+        try {
+          if (!recognition) {
+            configureRecognition();
+          }
+
+          await startAudioCapture();
+          recognition.start();
+        } catch (error) {
+          setStatus("開始できませんでした: " + error.message);
+          stopRecording();
+        }
+      });
+
+      stopButton.addEventListener("click", () => {
+        setStatus("停止しました。結果を確認してください。");
+        stopRecording();
+      });
+
+      supportNote.textContent = SpeechRecognition
+        ? "1行ずつの練習向けです。お手本音声がなくても発音比較はできます。"
+        : "このブラウザでは音声認識が使えません。Chrome か Safari を試してください。";
+
+      syncPracticeLines();
+    </script>
+  </body>
+</html>

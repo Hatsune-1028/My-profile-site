@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Song Pronunciation Coach</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">Local Practice App</p>
+        <h1>Song Pronunciation Coach</h1>
+        <p class="hero-copy">
+          英語の歌詞を声に出して、文字起こし結果と見本の歌詞を見比べながら
+          発音のズレを確認できるローカル用アプリです。
+        </p>
+      </header>
+
+      <main class="app-grid">
+        <section class="panel panel-lyrics">
+          <div class="panel-head">
+            <h2>1. 練習する歌詞</h2>
+            <button id="fill-sample" class="ghost-button" type="button">
+              サンプルを入れる
+            </button>
+          </div>
+          <label class="field-label" for="lyrics-input">歌詞やフレーズ</label>
+          <textarea
+            id="lyrics-input"
+            rows="8"
+            placeholder="例: You are my fire, the one desire"
+          ></textarea>
+
+          <div class="tips-card">
+            <p class="tips-title">使い方のコツ</p>
+            <ul>
+              <li>短いフレーズごとに分けると精度を見やすいです。</li>
+              <li>Chrome 系ブラウザで `localhost` を開くと安定しやすいです。</li>
+              <li>歌うより、まずは spoken に近く読むと比較しやすいです。</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="panel panel-controls">
+          <h2>2. 発音チェック</h2>
+          <p id="support-note" class="support-note"></p>
+
+          <div class="button-row">
+            <button id="start-button" class="primary-button" type="button">
+              録音してチェック開始
+            </button>
+            <button id="stop-button" class="secondary-button" type="button" disabled>
+              停止
+            </button>
+          </div>
+
+          <div class="status-card">
+            <p class="status-label">ステータス</p>
+            <p id="status-text" class="status-text">待機中です。</p>
+          </div>
+
+          <div class="score-grid">
+            <div class="score-card">
+              <span class="score-label">一致率</span>
+              <strong id="match-score">0%</strong>
+            </div>
+            <div class="score-card">
+              <span class="score-label">認識信頼度</span>
+              <strong id="confidence-score">-</strong>
+            </div>
+          </div>
+
+          <div class="playback-card">
+            <p class="playback-title">自分の音声を聞き返す</p>
+            <audio id="playback" controls></audio>
+          </div>
+        </section>
+
+        <section class="panel panel-results">
+          <h2>3. 比較結果</h2>
+
+          <div class="result-block">
+            <p class="result-title">認識された内容</p>
+            <p id="recognized-text" class="result-text muted">
+              まだ結果はありません。
+            </p>
+          </div>
+
+          <div class="result-block">
+            <p class="result-title">単語ごとの比較</p>
+            <div id="diff-output" class="diff-output"></div>
+          </div>
+
+          <div class="legend">
+            <span><i class="legend-chip hit"></i> 合っていた</span>
+            <span><i class="legend-chip miss"></i> 抜けた/聞き取られなかった</span>
+            <span><i class="legend-chip extra"></i> 余分に認識された</span>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
