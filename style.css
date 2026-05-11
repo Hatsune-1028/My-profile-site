@@ -325,7 +325,7 @@ main {
 
 .note-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 
@@ -469,6 +469,70 @@ main {
 .note-grid > .note-card:not(.note-card-featured) .note-link {
   margin-top: 16px;
   font-size: 0.78rem;
+  color: #555555;
+}
+
+.past-articles {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.past-articles-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 0 14px;
+}
+
+.past-articles-link {
+  color: #555555;
+  text-decoration: none;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.headline-item {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 16px 0;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+  color: inherit;
+  text-decoration: none;
+}
+
+.headline-date {
+  margin: 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+}
+
+.headline-body {
+  display: grid;
+  gap: 8px;
+}
+
+.headline-body h3 {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.5;
+}
+
+.headline-link {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #555555;
 }
 
@@ -739,6 +803,11 @@ main {
 
   .note-thumbnail {
     min-height: 180px;
+  }
+
+  .headline-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 }
 

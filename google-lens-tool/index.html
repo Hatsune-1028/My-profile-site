@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lens Desk</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace" aria-label="画像解析ワークスペース">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Lens Desk</p>
+            <h1>花の写真を保存する</h1>
+          </div>
+          <label class="upload-button">
+            <input id="imageInput" type="file" accept="image/*" />
+            <span>写真を選ぶ</span>
+          </label>
+        </header>
+
+        <div class="viewer" id="viewer">
+          <div class="empty-state" id="emptyState">
+            <div class="scan-mark" aria-hidden="true"></div>
+            <p>花の写真を選ぶと、ここに大きく表示されます。</p>
+          </div>
+          <canvas id="imageCanvas"></canvas>
+          <div class="selection" id="selection" aria-hidden="true"></div>
+        </div>
+
+        <div class="toolstrip" aria-label="表示ツール">
+          <button id="fitButton" type="button" title="全体表示">全体</button>
+          <button id="zoomInButton" type="button" title="拡大">+</button>
+          <button id="zoomOutButton" type="button" title="縮小">-</button>
+          <button id="clearButton" type="button" title="クリア">クリア</button>
+        </div>
+      </section>
+
+      <aside class="inspector" aria-label="解析結果">
+        <section class="panel easy-panel">
+          <div class="panel-title">
+            <h2>かんたん保存</h2>
+            <span id="saveStatus">未作成</span>
+          </div>
+          <label class="big-file-button" for="imageInput">1. 花の写真を選ぶ</label>
+          <a class="big-link-button" href="https://lens.google.com/upload" target="_blank" rel="noreferrer">2. Google Lensで調べる</a>
+          <label for="objectNameInput">3. 花の名前</label>
+          <input id="objectNameInput" class="big-input" type="text" placeholder="例: アジサイ、チューリップ、シバザクラ" />
+          <button id="makeImageButton" class="primary-action" type="button">4. 保存画像を作る</button>
+          <div class="save-preview" id="savePreview">
+            <p class="muted">作成した保存用画像がここに出ます。</p>
+          </div>
+          <a id="downloadImageLink" class="download-link" href="#" download="flower-photo.png" aria-disabled="true">5. PNGで保存</a>
+        </section>
+
+        <section class="panel search-panel">
+          <label for="queryInput">検索キーワード</label>
+          <div class="query-row">
+            <input id="queryInput" type="text" placeholder="例: 商品名、看板の文字、気になる単語" />
+            <button id="searchButton" type="button">検索</button>
+          </div>
+          <div class="quick-links">
+            <a id="googleLink" href="https://www.google.com/search" target="_blank" rel="noreferrer">Google</a>
+            <a id="imageLink" href="https://www.google.com/search?tbm=isch" target="_blank" rel="noreferrer">画像検索</a>
+            <a href="https://lens.google.com/upload" target="_blank" rel="noreferrer">Lensに送る</a>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <h2>保存設定</h2>
+          </div>
+          <div class="save-controls">
+            <select id="labelStyleSelect" aria-label="ラベル位置">
+              <option value="bottom">下にラベル</option>
+              <option value="top">上にラベル</option>
+              <option value="overlay">画像に重ねる</option>
+            </select>
+            <button id="makeImageButton" type="button">作成</button>
+          </div>
+          <div class="ocr-options">
+            <label><input id="saveCropCheck" type="checkbox" checked /> 選択範囲</label>
+            <label><input id="dateStampCheck" type="checkbox" checked /> 日付</label>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <h2>文字認識</h2>
+            <span id="ocrStatus">未実行</span>
+          </div>
+          <div class="ocr-controls">
+            <select id="languageSelect" aria-label="認識言語">
+              <option value="eng+jpn">英語 + 日本語</option>
+              <option value="eng">英語</option>
+              <option value="jpn">日本語</option>
+            </select>
+            <button id="ocrButton" type="button">読む</button>
+          </div>
+          <div class="ocr-options">
+            <label><input id="enhanceCheck" type="checkbox" checked /> 精度優先</label>
+            <label><input id="cropCheck" type="checkbox" checked /> 選択範囲のみ</label>
+          </div>
+          <textarea id="ocrOutput" readonly placeholder="画像を選んで「読む」を押すと、認識した文字が入ります。"></textarea>
+          <div class="inline-actions">
+            <button id="useOcrButton" type="button">検索欄へ</button>
+            <button id="copyOcrButton" type="button">コピー</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <h2>検出</h2>
+            <span id="supportBadge">準備中</span>
+          </div>
+          <div id="barcodeResults" class="result-list">
+            <p class="muted">バーコードやQRコードがある画像なら、対応ブラウザで自動検出します。</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <h2>色</h2>
+            <span id="imageMeta">未選択</span>
+          </div>
+          <div class="palette" id="palette"></div>
+        </section>
+
+        <section class="panel">
+          <label for="notesInput">メモ</label>
+          <textarea id="notesInput" placeholder="気づいた文字、翻訳したい文、調べたい特徴を書き留める"></textarea>
+        </section>
+      </aside>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
