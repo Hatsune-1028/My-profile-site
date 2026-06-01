@@ -6,6 +6,14 @@
   --muted: #5f5f5f;
   --line: rgba(17, 17, 17, 0.12);
   --accent: #111111;
+  --mint: #dff6ed;
+  --mint-strong: #2e8a67;
+  --sky: #e5f1ff;
+  --sky-strong: #3f78c5;
+  --sun: #fff1c6;
+  --sun-strong: #a36d00;
+  --leaf: #e7f6df;
+  --leaf-strong: #3f8b4b;
   --shadow: 0 20px 60px rgba(17, 17, 17, 0.08);
 }
 
@@ -41,7 +49,10 @@ body::after {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at top right, rgba(17, 17, 17, 0.05), transparent 26%);
+  background:
+    linear-gradient(135deg, rgba(63, 120, 197, 0.1), transparent 28%),
+    linear-gradient(315deg, rgba(46, 138, 103, 0.08), transparent 30%),
+    linear-gradient(180deg, transparent 55%, rgba(255, 241, 198, 0.14));
 }
 
 .page-shell {
@@ -100,7 +111,9 @@ body::after {
   grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.8fr);
   gap: 32px;
   padding: 72px 56px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 249, 245, 0.98));
+  background:
+    linear-gradient(135deg, rgba(229, 241, 255, 0.92), rgba(255, 255, 255, 0) 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 249, 245, 0.98));
 }
 
 .hero::after {
@@ -111,7 +124,7 @@ body::after {
   right: -80px;
   top: -90px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(17, 17, 17, 0.08), rgba(17, 17, 17, 0));
+  background: radial-gradient(circle, rgba(46, 138, 103, 0.22), rgba(46, 138, 103, 0));
 }
 
 .hero::before {
@@ -120,8 +133,8 @@ body::after {
   inset: auto 40px 36px auto;
   width: 180px;
   height: 180px;
-  border: 1px solid rgba(17, 17, 17, 0.12);
-  background: rgba(17, 17, 17, 0.02);
+  border: 1px solid rgba(163, 109, 0, 0.18);
+  background: rgba(255, 241, 198, 0.45);
   transform: rotate(12deg);
 }
 
@@ -132,8 +145,8 @@ body::after {
 .hero-panel {
   align-self: end;
   padding: 24px;
-  border: 1px solid var(--line);
-  background: #fcfcfa;
+  border: 1px solid rgba(63, 120, 197, 0.2);
+  background: linear-gradient(180deg, #ffffff, #f4f9ff);
   color: var(--text);
 }
 
@@ -201,7 +214,7 @@ p {
   margin-top: 18px;
   padding: 10px 14px;
   border-radius: 999px;
-  background: #f1f1ec;
+  background: var(--mint);
   color: var(--text);
 }
 
@@ -209,7 +222,7 @@ p {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #111111;
+  background: var(--mint-strong);
 }
 
 .hero-metrics {
@@ -256,6 +269,11 @@ p {
   color: var(--text);
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.86);
+}
+
+.button-primary {
+  border-color: rgba(46, 138, 103, 0.28);
+  background: linear-gradient(180deg, #ffffff, #f3fbf7);
 }
 
 .button-primary:hover,
@@ -310,8 +328,10 @@ main {
   grid-template-columns: 0.9fr 1.1fr;
   gap: 24px;
   padding: 32px;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background:
+    linear-gradient(135deg, rgba(223, 246, 237, 0.9), rgba(255, 255, 255, 0) 36%),
+    var(--surface);
+  border: 1px solid rgba(46, 138, 103, 0.16);
   box-shadow: var(--shadow);
 }
 
@@ -360,9 +380,11 @@ main {
   position: relative;
   grid-column: 1 / -1;
   padding: 26px 26px 24px;
-  background: linear-gradient(180deg, #fffdf8, #f6f2e8);
-  border: 3px solid rgba(17, 17, 17, 0.24);
-  box-shadow: 0 20px 42px rgba(17, 17, 17, 0.14);
+  background:
+    linear-gradient(135deg, rgba(255, 241, 198, 0.9), rgba(255, 255, 255, 0) 32%),
+    linear-gradient(180deg, #ffffff, #f3fbf7);
+  border: 3px solid rgba(46, 138, 103, 0.34);
+  box-shadow: 0 20px 42px rgba(46, 138, 103, 0.14);
 }
 
 .note-label {
@@ -380,7 +402,7 @@ main {
   min-height: 36px;
   padding: 0 14px;
   margin-bottom: 16px;
-  background: #111111;
+  background: #1f6f57;
   color: #ffffff;
   font-size: 0.84rem;
   font-weight: 700;
@@ -408,7 +430,7 @@ main {
 .note-thumbnail {
   position: relative;
   min-height: 240px;
-  border: 1px solid rgba(17, 17, 17, 0.12);
+  border: 1px solid rgba(46, 138, 103, 0.2);
   background: #ffffff;
   overflow: hidden;
   display: grid;
@@ -437,7 +459,7 @@ main {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #6f6f6f;
+  color: var(--mint-strong);
 }
 
 .note-card p:last-child {
@@ -461,9 +483,9 @@ main {
   width: fit-content;
   min-height: 44px;
   padding: 0 16px;
-  border: 1px solid rgba(17, 17, 17, 0.22);
+  border: 1px solid rgba(46, 138, 103, 0.28);
   background: #ffffff;
-  box-shadow: 0 6px 14px rgba(17, 17, 17, 0.06);
+  box-shadow: 0 6px 14px rgba(46, 138, 103, 0.08);
 }
 
 .note-grid > .note-card:not(.note-card-featured) .note-link {
@@ -475,7 +497,7 @@ main {
 .past-articles {
   display: grid;
   gap: 0;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid rgba(46, 138, 103, 0.18);
 }
 
 .past-articles-header {
@@ -513,7 +535,7 @@ main {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #7a7a7a;
+  color: var(--sky-strong);
 }
 
 .headline-body {
@@ -541,8 +563,8 @@ main {
   gap: 10px;
   align-content: center;
   padding: 28px;
-  background: #f1f1ec;
-  border: 1px solid var(--line);
+  background: linear-gradient(180deg, #f8fff8, var(--leaf));
+  border: 1px solid rgba(63, 139, 75, 0.18);
 }
 
 .profile-panel p {
@@ -584,11 +606,18 @@ main {
 }
 
 .work-column.is-active {
-  background: #eef5ff;
+  border-color: rgba(63, 120, 197, 0.24);
+  background: linear-gradient(180deg, #f8fbff, var(--sky));
 }
 
 .work-column.is-done {
-  background: #f1f8f1;
+  border-color: rgba(63, 139, 75, 0.22);
+  background: linear-gradient(180deg, #fbfffb, var(--leaf));
+}
+
+.work-column.is-plan {
+  border-color: rgba(163, 109, 0, 0.22);
+  background: linear-gradient(180deg, #fffdf6, var(--sun));
 }
 
 .work-column-header {
@@ -608,15 +637,15 @@ main {
 }
 
 .is-active .work-dot {
-  background: #4d98ff;
+  background: var(--sky-strong);
 }
 
 .is-done .work-dot {
-  background: #61b87a;
+  background: var(--leaf-strong);
 }
 
 .is-plan .work-dot {
-  background: #a0a0a0;
+  background: var(--sun-strong);
 }
 
 .work-column-title {
@@ -674,8 +703,8 @@ main {
 }
 
 .is-plan .work-pill {
-  background: #f1f1ec;
-  color: #6b6b6b;
+  background: #fff7df;
+  color: var(--sun-strong);
 }
 
 .work-card h3 {
