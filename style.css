@@ -97,6 +97,7 @@ body::after {
 
 .hero,
 .card,
+.about-profile,
 .profile,
 .contact {
   background: var(--surface);
@@ -287,10 +288,123 @@ main {
   margin-top: 24px;
 }
 
-.card-grid {
+.about-profile {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  grid-template-columns: auto minmax(0, 1fr) minmax(210px, 0.38fr);
+  gap: 28px;
+  align-items: center;
+  padding: 34px;
+  background:
+    linear-gradient(135deg, rgba(223, 246, 237, 0.95), rgba(255, 255, 255, 0) 34%),
+    linear-gradient(315deg, rgba(229, 241, 255, 0.9), rgba(255, 255, 255, 0) 34%),
+    var(--surface);
+  border-color: rgba(46, 138, 103, 0.18);
+}
+
+.about-avatar {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(112px, 13vw, 150px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(46, 138, 103, 0.24);
+  border-radius: 50%;
+  background:
+    linear-gradient(135deg, rgba(255, 241, 198, 0.92), rgba(255, 255, 255, 0) 45%),
+    linear-gradient(180deg, #ffffff, var(--mint));
+  box-shadow: 0 18px 36px rgba(46, 138, 103, 0.14);
+}
+
+.about-avatar::before,
+.about-avatar::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(46, 138, 103, 0.18);
+}
+
+.about-avatar::before {
+  width: 26%;
+  height: 26%;
+  right: 6%;
+  top: 10%;
+}
+
+.about-avatar::after {
+  width: 16%;
+  height: 16%;
+  left: 12%;
+  bottom: 18%;
+  background: var(--sky);
+}
+
+.about-avatar span {
+  position: relative;
+  z-index: 1;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  font-weight: 700;
+  letter-spacing: 0;
+  color: #1f6f57;
+}
+
+.about-profile-copy {
+  display: grid;
+  gap: 14px;
+}
+
+.about-profile-copy h2 {
+  font-family: "Space Grotesk", "Noto Sans JP", sans-serif;
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  letter-spacing: 0;
+}
+
+.about-profile-copy p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.about-catch {
+  width: fit-content;
+  padding: 8px 12px;
+  border: 1px solid rgba(63, 120, 197, 0.2);
+  background: rgba(229, 241, 255, 0.72);
+  color: #244b7e;
+  font-weight: 700;
+}
+
+.about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.about-theme {
+  display: grid;
+  gap: 10px;
+  align-content: center;
+  min-height: 190px;
+  padding: 24px;
+  border: 1px solid rgba(163, 109, 0, 0.2);
+  background: linear-gradient(180deg, #fffdf7, var(--sun));
+}
+
+.about-theme strong {
+  font-family: "Space Grotesk", "Noto Sans JP", sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  line-height: 1.1;
+}
+
+.about-theme span {
+  color: var(--sun-strong);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .card {
@@ -741,6 +855,7 @@ main {
 
 .hero,
 .card,
+.about-profile,
 .profile,
 .contact,
 .note-section,
@@ -750,6 +865,7 @@ main {
 
 .hero,
 .card,
+.about-profile,
 .profile,
 .contact,
 .note-section {
@@ -758,6 +874,7 @@ main {
 
 .hero > *,
 .card > *,
+.about-profile > *,
 .profile > *,
 .contact > *,
 .note-section > * {
@@ -767,6 +884,7 @@ main {
 
 .hero::selection,
 .card::selection,
+.about-profile::selection,
 .profile::selection,
 .contact::selection,
 .note-section::selection {
@@ -774,6 +892,7 @@ main {
 }
 
 .card::after,
+.about-profile::after,
 .profile::after,
 .contact::after,
 .note-section::after {
@@ -786,6 +905,7 @@ main {
 }
 
 .card:hover::after,
+.about-profile:hover::after,
 .profile:hover::after,
 .contact:hover::after,
 .note-section:hover::after {
@@ -810,7 +930,7 @@ main {
     bottom: 24px;
   }
 
-  .card-grid,
+  .about-profile,
   .profile,
   .note-section,
   .works-grid,
@@ -838,11 +958,34 @@ main {
     grid-template-columns: 1fr;
     gap: 8px;
   }
+  .about-profile {
+    gap: 20px;
+    padding: 28px 22px;
+  }
+
+  .about-avatar {
+    width: 112px;
+  }
+
+  .about-theme {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .about-profile {
+    align-items: start;
+  }
+
+  .about-catch {
+    width: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .hero,
   .card,
+  .about-profile,
   .profile,
   .contact {
     animation: rise 700ms ease both;
