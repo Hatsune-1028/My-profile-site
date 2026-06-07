@@ -109,8 +109,9 @@ main {
 .hero {
   position: relative;
   display: grid;
-  place-items: center;
-  min-height: clamp(620px, 82vh, 820px);
+  justify-items: center;
+  align-content: center;
+  min-height: 100vh;
   overflow: hidden;
   padding: clamp(60px, 9vw, 116px) clamp(22px, 6vw, 72px);
   border-radius: 30px;
@@ -120,23 +121,6 @@ main {
     radial-gradient(circle at 82% 12%, rgba(255, 255, 255, 0.16), transparent 28%),
     linear-gradient(135deg, #080914 0%, #16182b 55%, #05050a 100%);
   box-shadow: 0 34px 90px rgba(8, 9, 20, 0.36);
-}
-
-.hero::before {
-  content: "AI × MARKETING";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -52%);
-  width: max-content;
-  max-width: 100%;
-  color: rgba(255, 255, 255, 0.055);
-  font-size: clamp(4.8rem, 15vw, 14rem);
-  font-weight: 900;
-  letter-spacing: 0;
-  line-height: 0.82;
-  text-align: center;
-  pointer-events: none;
 }
 
 .hero::after {
@@ -182,12 +166,12 @@ p {
 }
 
 h1 {
-  max-width: 11ch;
+  max-width: 17ch;
   margin-bottom: 24px;
-  font-size: clamp(3.4rem, 9vw, 7.2rem);
-  font-weight: 900;
+  font-size: clamp(2rem, 5.2vw, 4.2rem);
+  font-weight: 700;
   letter-spacing: 0;
-  line-height: 0.92;
+  line-height: 1.4;
 }
 
 h2 {
@@ -261,11 +245,10 @@ p {
 }
 
 .hero-panel {
-  position: absolute;
+  position: relative;
   z-index: 1;
-  right: clamp(18px, 4vw, 44px);
-  bottom: clamp(18px, 4vw, 44px);
-  width: min(330px, calc(100% - 36px));
+  width: min(400px, 100%);
+  margin-top: 34px;
   padding: 18px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 20px;
@@ -730,19 +713,11 @@ p {
 
 @media (max-width: 920px) {
   .hero {
-    min-height: 680px;
+    min-height: 100vh;
   }
 
   .hero-panel {
-    position: relative;
-    right: auto;
-    bottom: auto;
     width: 100%;
-    margin-top: 34px;
-  }
-
-  .hero-copy {
-    align-self: end;
   }
 
   .about-profile,
@@ -790,7 +765,7 @@ p {
   }
 
   .hero {
-    min-height: 620px;
+    min-height: 100vh;
     border-radius: 24px;
   }
 
